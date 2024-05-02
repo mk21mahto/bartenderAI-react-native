@@ -5,6 +5,9 @@ import React, { useState } from "react";
 import { View, Text, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// EXPO
+import { router } from "expo-router";
+
 // LIBRARIES
 import axios from 'axios';
 
@@ -36,6 +39,7 @@ export const IndexContent = () => {
 
             if (response.status === 200) {
                 Toast.success(response.data.message);
+                router.replace("(screens)/home"); // Redirect to home after success, I used .replace so it forbids when you go back on phone to go back on the last page
             } else {
                 Toast.error(response.data.error);
             }
