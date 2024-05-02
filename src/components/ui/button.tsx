@@ -1,5 +1,15 @@
+// REACTJS IMPORTS
 import React from 'react';
+
+// REACT NATIVE IMPORTS
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+
+type ButtonProps = {
+    children: React.ReactNode;
+    variant?: string;
+    onPress?: () => void;
+    className?: string;
+}
 
 const styles = StyleSheet.create({
     defaultButton: {
@@ -30,11 +40,16 @@ const buttonVariants = {
     main: styles.mainButton
 };
 
-export const Button = ({ children, variant = 'default', onPress }) => {
+export const Button = ({ 
+    children, 
+    variant = 'default', 
+    onPress,
+    className,
+}: ButtonProps) => {
     const buttonStyle = buttonVariants[variant];
 
     return (
-        <TouchableOpacity onPress={onPress} style={buttonStyle}>
+        <TouchableOpacity onPress={onPress} style={buttonStyle} className={className}>
             <Text style={styles.text}>{children}</Text>
         </TouchableOpacity>
     );

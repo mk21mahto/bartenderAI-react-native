@@ -1,3 +1,4 @@
+// REACTJS IMPORTS
 import React from 'react';
 
 // REACT NATIVE IMPORTS
@@ -7,6 +8,9 @@ type InputProps = {
     placeholder: string;
     variant?: string;
     isNumber?: boolean;
+    className?: string;
+    value?: string;
+    onChangeText?: (text: string) => void;
 }
 
 const styles = StyleSheet.create({
@@ -25,6 +29,9 @@ export const Input = ({
     variant = 'default',
     placeholder,
     isNumber,
+    className,
+    value,
+    onChangeText
 }: InputProps) => {
     const inputStyle = inputVariants[variant];
 
@@ -33,6 +40,9 @@ export const Input = ({
             style={inputStyle}
             placeholder={placeholder}
             keyboardType={isNumber ? "numeric" : "default"}
+            className={className}
+            value={value}
+            onChangeText={onChangeText}
         />
     );
 };
