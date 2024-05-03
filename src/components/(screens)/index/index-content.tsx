@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 // REACT NATIVE IMPORTS
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // EXPO
@@ -17,7 +17,7 @@ import { AWS_EC2_PATH } from "@/config";
 // COMPONENTS
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Toast } from "@/components/ui/toast";
+import { ToastUtil } from "@/components/ui/toast";
 
 const logoPath = "@/assets/images/logo/logo_design_part_transparent.png";
 
@@ -29,22 +29,36 @@ export const IndexContent = () => {
     const handleSubmitPrivateKey = async () => {
         try {
             const response = await axios.post(`${AWS_EC2_PATH}/api/reactnative/check_private_key`, {
+                private_key: privateKey
+            }, {
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    private_key: privateKey
-                })
+                }
             });
-
+    
             if (response.status === 200) {
-                Toast.success(response.data.message);
-                router.replace("(screens)/home"); // Redirect to home after success, I used .replace so it forbids when you go back on phone to go back on the last page
+                ToastUtil.success(response.data.success);
+                
+                const incrementResponse = await axios.post(`${AWS_EC2_PATH}/api/reactnative/increment_private_key_usage`, {
+                    private_key: privateKey
+                });
+    
+                if (incrementResponse.status === 200) {
+                    console.log("Usage incremented successfully.");
+                } /* else {
+                    console.error("Failed to increment usage: ", incrementResponse.data.error);
+                } */
+    
+                router.replace("(screens)/home"); // Redirect to home after successful private key check
             } else {
-                Toast.error(response.data.error);
+                ToastUtil.error(response.data.error || "Private key incorrect!");
             }
         } catch (error) {
-            Toast.error('Failed to check private key.');
+            if (error.response) {
+                ToastUtil.error(error.response.data.error || "Private key incorrect, or something else went wrong!");
+            } else {
+                ToastUtil.error("Network error or server did not respond.");
+            }
         }
     };
 
@@ -53,7 +67,7 @@ export const IndexContent = () => {
             <View className="flex mt-16 items-center">
                 <Image 
                     source={require(logoPath)} 
-                    className="w-20 h-20"
+                    style={styles.logoImage}
                 />
             </View>
 
@@ -72,3 +86,10 @@ export const IndexContent = () => {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    logoImage: {
+        width: 80,
+        height: 80
+    }
+});
