@@ -6,7 +6,7 @@ import { View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // EXPO
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";
@@ -14,18 +14,18 @@ import { Button } from "@/components/ui/button";
 export const ConfirmationContent = () => {
     const { top, bottom } = useSafeAreaInsets();
 
+    const routeToHome = () => {
+        router.replace("(screens)/home");
+    }
     return (
         <View style={{ paddingTop: top, paddingBottom: bottom }} className="flex flex-1">
-            <View className="flex flex-1 h-dvh justify-between">
+            <View className="flex flex-1 h-dvh">
                 <View className="flex">
-                    <Text>Confirmation Component</Text>
-                    
-                    <Link href="(screens)/home">Go to Home</Link>
+                    <Text>Your Order is confirmed</Text>
+                    <Text>Order Id: 123456789</Text>
+                    <Button variant="main" onPress={routeToHome}>Start New Order</Button>
                 </View>
 
-                <View>
-                    <Button onPress={''}>Checkout</Button>
-                </View>
             </View>
         </View>
     )
