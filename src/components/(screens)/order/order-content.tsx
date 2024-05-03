@@ -11,16 +11,16 @@ import { Link } from "expo-router";
 // COMPONENTS
 import { Button } from "@/components/ui/button";
 
-export const HomeContent = () => {
+export const OrderContent = () => {
     const { top, bottom } = useSafeAreaInsets();
 
     return (
         <View style={{ paddingTop: top, paddingBottom: bottom }} className="flex flex-1">
             <View className="flex flex-1 h-dvh justify-between">
                 <View className="flex">
-                    <Text>Home Component</Text>
+                    <Text>Order Component</Text>
                     
-                    <Link href="(screens)/order">Go to Order</Link>
+                    <Link href="(screens)/confirmation">Go to Confirmation</Link>
                 </View>
 
                 <View>
