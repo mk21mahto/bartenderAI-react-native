@@ -28,6 +28,10 @@ export const HomeContent = () => {
         setLanguage('');
     };
 
+    const handleStartRecognizing = () => {
+
+    };
+
     const viewClass = language ? "flex flex-1 justify-between" : "flex flex-1 mt-10";
 
     return (
@@ -36,7 +40,7 @@ export const HomeContent = () => {
                 <View className="flex items-center">
                     <Text className="font-bold text-2xl">Welcome to Tallat Coffee</Text>
                     {language ? (
-                        <Button onPress={handleResetLanguage}>Change language</Button>
+                        <Button onPress={handleResetLanguage} className="mt-5">Change language</Button>
                     ) : (
                         <Text>To order, please choose the language first</Text>
                     )}

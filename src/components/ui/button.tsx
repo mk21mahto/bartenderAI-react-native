@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     mainButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 224,
-        paddingVertical: 8,
+        paddingHorizontal: 64,
+        paddingVertical: 24,
         borderRadius: 4,
         backgroundColor: '#e64b4f',
     },
