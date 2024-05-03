@@ -11,20 +11,27 @@ import { Link } from "expo-router";
 // COMPONENTS
 import { Button } from "@/components/ui/button";
 
+// LUCIDE ICONS
+import { Mic } from "lucide-react-native";
+
 export const HomeContent = () => {
     const { top, bottom } = useSafeAreaInsets();
 
     return (
         <View style={{ paddingTop: top, paddingBottom: bottom }} className="flex flex-1">
-            <View className="flex flex-1 h-dvh justify-between">
+            <View className="flex flex-1 justify-between">
                 <View className="flex flex-row">
-                    <Text>Hello</Text>
+                    <Text>Home Component</Text>
                     
-                    <Link href="(screens)/home">Index</Link>
+                    <Link href="(screens)/order">Go to Order</Link>
                 </View>
 
                 <View>
-                    <Button onPress={''}>Checkout</Button>
+                    <Mic size={24} />
+                </View>
+
+                <View>
+                    <Button>Start</Button>
                 </View>
             </View>
         </View>

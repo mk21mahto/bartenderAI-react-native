@@ -1,5 +1,5 @@
 // REACTJS IMPORTS
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // REACT NATIVE IMPORTS
 import { View, Text, Image, StyleSheet } from "react-native";
@@ -19,37 +19,48 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ToastUtil } from "@/components/ui/toast";
 
+// STORES
+import useAuthStore from '@/store/useAuthStore';
+
 const logoPath = "@/assets/images/logo/logo_design_part_transparent.png";
 
 export const IndexContent = () => {
     const { bottom } = useSafeAreaInsets(); // No need for "top" because it gives additional padding and our things wont be really centered but slightly off
 
-    const [privateKey, setPrivateKey] = useState('');
+    const { loadPrivateKey, privateKey, setPrivateKey } = useAuthStore();
+    const [inputPrivateKey, setInputPrivateKey] = useState('');
+
+    useEffect(() => {
+        loadPrivateKey();
+        if (privateKey) {
+            router.replace("(screens)/home");
+        }
+    }, [loadPrivateKey, privateKey]);
 
     const handleSubmitPrivateKey = async () => {
         try {
             const response = await axios.post(`${AWS_EC2_PATH}/api/reactnative/check_private_key`, {
-                private_key: privateKey
+                private_key: inputPrivateKey
             }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-    
+
             if (response.status === 200) {
                 ToastUtil.success(response.data.success);
-                
+
                 const incrementResponse = await axios.post(`${AWS_EC2_PATH}/api/reactnative/increment_private_key_usage`, {
-                    private_key: privateKey
+                    private_key: inputPrivateKey
                 });
-    
+
                 if (incrementResponse.status === 200) {
                     console.log("Usage incremented successfully.");
-                } /* else {
-                    console.error("Failed to increment usage: ", incrementResponse.data.error);
-                } */
-    
-                router.replace("(screens)/home"); // Redirect to home after successful private key check
+                    setPrivateKey(inputPrivateKey);
+                    router.replace("(screens)/home"); // I used .replace so user when clicks on phone to go back, he cant go back to login page
+                } else {
+                    ToastUtil.error("Failed to increment usage");
+                }
             } else {
                 ToastUtil.error(response.data.error || "Private key incorrect!");
             }
@@ -62,27 +73,28 @@ export const IndexContent = () => {
         }
     };
 
+    if (privateKey) {
+        router.replace("(screens)/home"); // I used .replace so user when clicks on phone to go back, he cant go back to login page
+        return null; // Render nothing if privateKey is set
+    }
+
     return (
         <View style={{ paddingBottom: bottom }} className="flex flex-1 gap-y-28">
             <View className="flex mt-16 items-center">
-                <Image 
-                    source={require(logoPath)} 
-                    style={styles.logoImage}
-                />
+                <Image source={require(logoPath)} style={styles.logoImage} />
             </View>
-
             <View className="flex flex-col items-center gap-y-5">
                 <Text className="font-bold text-2xl">Private key</Text>
-                <Input 
-                    placeholder="Your private key..." 
-                    className="w-[90%]" 
-                    value={privateKey}
-                    onChangeText={setPrivateKey}
+                <Input
+                    placeholder="Your private key..."
+                    className="w-[90%]"
+                    value={inputPrivateKey}
+                    onChangeText={setInputPrivateKey}
                 />
-                <Button onPress={handleSubmitPrivateKey} className="w-[90%] py-5">Submit</Button>
+                <Button onPress={handleSubmitPrivateKey} className="w-[90%] py-5">
+                    Submit
+                </Button>
             </View>
-
-            {/*<Link href="(screens)/home">Go to home</Link>*/}
         </View>
     );
 }
