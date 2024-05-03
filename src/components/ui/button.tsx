@@ -13,27 +13,27 @@ type ButtonProps = {
 };
 
 const styles = StyleSheet.create({
-  defaultButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 64,
-    paddingVertical: 8,
-    borderRadius: 4,
-    backgroundColor: "#e64b4f",
-  },
-  mainButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 224,
-    paddingVertical: 8,
-    borderRadius: 4,
-    backgroundColor: "#e64b4f",
-  },
-  text: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "500",
-  },
+    defaultButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 64,
+        paddingVertical: 16,
+        borderRadius: 4,
+        backgroundColor: '#e64b4f',
+    },
+    mainButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 224,
+        paddingVertical: 8,
+        borderRadius: 4,
+        backgroundColor: '#e64b4f',
+    },
+    text: {
+        color: 'white',
+        fontSize: 14,
+        fontWeight: '500',
+    }
 });
 
 const buttonVariants = {
