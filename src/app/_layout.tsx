@@ -1,6 +1,6 @@
 // REACTJS IMPORTS
-import React, { useEffect } from 'react';
-import { useQuery, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // REACT NATIVE IMPORTS
 import { RootSiblingParent } from 'react-native-root-siblings';
@@ -8,16 +8,17 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 // EXPO
 import { Stack } from "expo-router";
 
-// STORES
-import useAuthStore from '@/store/useAuthStore';
-
-// ASYNC STORAGE
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// LIBRARIES
+import * as Sentry from '@sentry/react-native';
 
 // STYLES
 import "../global.css";
 
 const queryClient = new QueryClient();
+
+Sentry.init({
+  dsn: 'https://165a44b1f8056d26c0646f681b5662af@o4507210397581312.ingest.de.sentry.io/4507210398957648',
+});
 
 export default function Layout() {
   return (
