@@ -15,7 +15,18 @@
         }
       ]
     ],
-    "name": "bartenderAI-react-native",
-    "slug": "bartenderAI-react-native"
+    "name": "staffai-react-native",
+    "slug": "staffai-react-native",
+    "android": {
+      "package": "com.anonymous.staffaireactnative"
+    },
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "ab7dee53-624a-4589-b54f-1c9781eb9003"
+      }
+    }
   }
 }

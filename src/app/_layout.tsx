@@ -68,6 +68,42 @@ export default function Layout() {
               )*/
             }}
           />
+
+          <Stack.Screen 
+            name="(screens)/ai-order" 
+            options={{ 
+              title: "Order with AI", 
+              headerStyle: { backgroundColor: "#e64b4f" }, 
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              }
+            }}
+          />
+
+          <Stack.Screen 
+            name="(screens)/manual-order" 
+            options={{ 
+              title: "Manual order", 
+              headerStyle: { backgroundColor: "#e64b4f" }, 
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              }
+            }}
+          />
+
+          <Stack.Screen 
+            name="(screens)/final-order" 
+            options={{ 
+              title: "Order details", 
+              headerStyle: { backgroundColor: "#e64b4f" }, 
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              }
+            }}
+          />
         </Stack>
       </RootSiblingParent>
     </QueryClientProvider>

@@ -31,11 +31,17 @@ export const IndexContent = () => {
     const [inputPrivateKey, setInputPrivateKey] = useState('');
 
     useEffect(() => {
-        loadPrivateKey();
+        const fetchData = async () => {
+            await loadPrivateKey();
+        };
+        fetchData();
+    }, [loadPrivateKey]);
+
+    useEffect(() => {
         if (privateKey) {
             router.replace("(screens)/home");
         }
-    }, [loadPrivateKey, privateKey]);
+    }, [privateKey, router]);
 
     const handleSubmitPrivateKey = async () => {
         try {
@@ -57,7 +63,7 @@ export const IndexContent = () => {
                 if (incrementResponse.status === 200) {
                     console.log("Usage incremented successfully.");
                     setPrivateKey(inputPrivateKey);
-                    router.replace("(screens)/home"); // I used .replace so user when clicks on phone to go back, he cant go back to login page
+                    router.replace("(screens)/home");
                 } else {
                     ToastUtil.error("Failed to increment usage");
                 }
@@ -72,11 +78,6 @@ export const IndexContent = () => {
             }
         }
     };
-
-    if (privateKey) {
-        router.replace("(screens)/home"); // I used .replace so user when clicks on phone to go back, he cant go back to login page
-        return null; // Render nothing if privateKey is set
-    }
 
     return (
         <View style={{ paddingBottom: bottom }} className="flex flex-1 gap-y-28">

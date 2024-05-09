@@ -1,1 +1,1 @@
-export const AWS_EC2_PATH = "http://ec2-15-236-141-103.eu-west-3.compute.amazonaws.com:8080";
+export const AWS_EC2_PATH = "https://api.gameinfiny.com";
