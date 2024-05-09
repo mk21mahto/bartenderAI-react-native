@@ -27,9 +27,13 @@ export const AiOrderContent = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const handleSwitchToActiveOrders = () => {
+        router.push("(screens)/active-orders");
+    };
+
     const handleSwitchToManualOrder = () => {
         router.replace("(screens)/manual-order");
-    }
+    };
 
     const startRecording = async () => {
         try {
@@ -93,7 +97,7 @@ export const AiOrderContent = () => {
             if (apiResponse.data) {
                 console.log(apiResponse.data);
                 router.push({
-                    pathname: "(screens)/final-order",
+                    pathname: "(screens)/order-details",
                     params: {
                         transcribedText: apiResponse.data
                     }
@@ -110,7 +114,14 @@ export const AiOrderContent = () => {
 
     return (
         <View className="flex flex-1 justify-between">
-            <View className="flex items-center pt-5 w-full">
+            <View className="flex items-center pt-5 w-full gap-y-3">
+                <Button
+                    className="w-[90%]"
+                    variant="blue"
+                    onPress={handleSwitchToActiveOrders}
+                >
+                    Active orders
+                </Button>
                 <Button 
                     className="w-[90%]" 
                     variant="gray"
@@ -128,8 +139,11 @@ export const AiOrderContent = () => {
 
             <View className="flex items-center pb-5">
                 <View className="flex flex-col items-center gap-y-4 w-full">
-                    <Button onPress={startRecording} className="w-[90%]">Start</Button>
-                    <Button onPress={stopRecording} className="w-[90%]">Stop</Button>
+                    {!isRecording ? (
+                        <Button onPress={startRecording} className="w-[90%]">Start</Button>
+                    ) : (
+                        <Button onPress={stopRecording} className="w-[90%]">Stop</Button>
+                    )}
                 </View>
             </View>
 

@@ -30,6 +30,14 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       backgroundColor: '#6B7280',
     },
+    blueDefaultButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 64,
+      paddingVertical: 16,
+      borderRadius: 4,
+      backgroundColor: '#3B82F6',
+    },
     mainButton: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -61,6 +69,7 @@ const styles = StyleSheet.create({
 const buttonVariants = {
   default: styles.defaultButton,
   gray: styles.grayDefaultButton,
+  blue: styles.blueDefaultButton,
   main: styles.mainButton,
   big: styles.bigButton,
 };

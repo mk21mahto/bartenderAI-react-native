@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // EXPO
 import { useLocalSearchParams } from 'expo-router';
 
-export const FinalOrderContent = () => {
+export const OrderDetailsContent = () => {
     const { top, bottom } = useSafeAreaInsets();
 
     const { transcribedText } = useLocalSearchParams<{ transcribedText?: string }>();
