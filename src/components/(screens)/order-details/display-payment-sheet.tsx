@@ -6,10 +6,18 @@ import { View, Text, TouchableOpacity } from "react-native";
 
 // EXPO
 import Checkbox from "expo-checkbox";
+import { router } from "expo-router";
+
+// ACTIONS
+import { makeOrder } from "@/actions/make_order";
 
 // COMPONENTS
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { ToastUtil } from "@/components/ui/toast";
+
+// TYPES
+import { typesProduct } from "@/types/typesProduct";
 
 // EXPO ICONS
 import { Ionicons } from '@expo/vector-icons';
@@ -19,12 +27,14 @@ import { FontAwesome } from '@expo/vector-icons';
 type DisplayPaymentSheetProps = {
     bottomSheetRef: React.RefObject<BottomSheet>;
     setIsPaymentSheetVisible: (isVisible: boolean) => void;
+    products: typesProduct[];
     totalPrice: number;
 }
 
 export const DisplayPaymentSheet = ({
     bottomSheetRef,
     setIsPaymentSheetVisible,
+    products,
     totalPrice
 }: DisplayPaymentSheetProps) => {
     const [paymentOption, setPaymentOption] = useState('Credit Card');
@@ -42,6 +52,27 @@ export const DisplayPaymentSheet = ({
     
     const handleSetCashPayment = () => {
         setPaymentOption('Cash');
+    };
+
+    const handlePlaceOrder = async (products: typesProduct[]) => {
+        try {
+            console.log("Ordering with products:", products);
+            const response = await makeOrder({ 
+                products: products, 
+                total_price: totalPrice 
+            });
+
+            if(response.ok) {
+                ToastUtil.success("Order placed successfully!");
+                router.replace("(screens)/ai-order");
+            } else {
+                ToastUtil.error("Order failed. Please try again or if issue persists switch to manual order!");
+                router.replace("(screens)/ai-order");
+            }
+        } catch (error) {
+            ToastUtil.error("Failed to place order!");
+            router.replace("(screens)/ai-order");
+        }
     };
 
     const handleClosePaymentSheet = () => {
@@ -89,7 +120,10 @@ export const DisplayPaymentSheet = ({
                 </View>
 
                 <View className="flex flex-col gap-y-3">
-                    <TouchableOpacity className="flex flex-row items-center justify-between bg-[#e64b4f] p-5 rounded-md">
+                    <TouchableOpacity
+                        onPress={() => handlePlaceOrder(products)}
+                        className="flex flex-row items-center justify-between bg-[#e64b4f] p-5 rounded-md"
+                    >
                         <Text className="text-white font-medium">Place order</Text>
                         <Text className="text-white"><FontAwesome name="euro" size={14} color="white" /> {totalPrice}</Text>
                     </TouchableOpacity>

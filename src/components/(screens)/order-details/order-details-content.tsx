@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { DisplayPaymentSheet } from "@/components/(screens)/order-details/display-payment-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
 
+// TYPES
+import { typesProduct } from "@/types/typesProduct";
+
 // EXPO ICONS
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -21,7 +24,7 @@ export const OrderDetailsContent = () => {
     const { top, bottom } = useSafeAreaInsets();
     const { transcribedText } = useLocalSearchParams<{ transcribedText?: string }>();
 
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<typesProduct[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -30,26 +33,32 @@ export const OrderDetailsContent = () => {
     useEffect(() => {
         if (transcribedText) {
             const lines = transcribedText.split('\n');
-            const parsedProducts = lines.slice(0, -1).filter(line => line.trim() !== ""); // Products lines
-            setProducts(parsedProducts);
+            const parsedProducts = lines.slice(0, -1)
+                .filter(line => line.trim() !== "")
+                .map(line => {
+                    const priceMatch = line.match(/(\d+(\.\d+)?)\s*EUR$/);
+                    const productPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
+                    // Enhanced regex to remove any leading numbers and dots/spaces from the product name
+                    const productName = line
+                        .replace(/(\d+(\.\d+)?)\s*EUR$/, '') // Remove price
+                        .replace(/^\d+\.\s*/, '') // Remove number like 1., 2. ....
+                        .trim(); // Remove any remaining white space
+                    return { productName, productPrice };
+                });
     
-            const total = parsedProducts.reduce((acc, line) => {
-                const priceMatch = line.match(/(\d+(\.\d+)?)\s*EUR$/);
-                return acc + (priceMatch ? parseFloat(priceMatch[1]) : 0);
-            }, 0);
-            
+            const total = parsedProducts.reduce((acc, product) => acc + product.productPrice, 0);
             console.log("Calculated Total Price:", total);
+            setProducts(parsedProducts);
             setTotalPrice(total);
         }
     }, [transcribedText]);
 
     const removeProduct = (index: number) => {
         const newProducts = [...products];
-        const priceMatch = newProducts[index].match(/(\d+(\.\d+)?) EUR/);
-        const priceToSubtract = priceMatch ? priceMatch[1] : '0'; // Default to '0' if no match
+        const priceToSubtract = newProducts[index].productPrice;
         newProducts.splice(index, 1);
         setProducts(newProducts);
-        setTotalPrice(prevTotal => prevTotal - Number(priceToSubtract));
+        setTotalPrice(prevTotal => prevTotal - priceToSubtract);
     };
 
     const handleOpenPaymentSheet = () => {
@@ -65,10 +74,13 @@ export const OrderDetailsContent = () => {
 
                     <View className="flex flex-col pt-5 gap-y-3">
                         {products.map((item, index) => {
-                            const itemName = item.replace(/^\d+\.\s*/, '') || "Unknown product";
+                            const itemName = item.productName || "Unknown product";
+                            const itemPrice = item.productPrice !== undefined ? `${item.productPrice} EUR` : "Price not available";
+
                             return (
                                 <View key={index} className="flex flex-row p-3 justify-between bg-gray-500 mt-2 rounded-md">
-                                    <Text className="text-lg text-white">{index + 1}. {itemName}</Text>
+                                    <Text className="text-lg text-white">{index + 1}. {itemName} {itemPrice}</Text>
+
                                     <TouchableOpacity onPress={() => removeProduct(index)}>
                                         <Feather name="x-circle" size={24} color="red" />
                                     </TouchableOpacity>
@@ -93,6 +105,7 @@ export const OrderDetailsContent = () => {
                 <DisplayPaymentSheet
                     bottomSheetRef={bottomSheetRef}
                     setIsPaymentSheetVisible={setIsPaymentSheetVisible}
+                    products={products}
                     totalPrice={totalPrice}
                 />
             )}

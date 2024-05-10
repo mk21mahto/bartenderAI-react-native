@@ -33,10 +33,10 @@ export const ActiveOrdersContent = () => {
     }, []);
 
     const getBackgroundColor = (created_at: Date) => {
-        const elapsedMinutes = Math.floor((new Date().getTime() - created_at.getTime()) / 60000); // Convert ms to minutes
-        if (elapsedMinutes > 15) {
+        const elapsedMinutes = Math.floor((new Date().getTime() - created_at.getTime()) / 60000);
+        if (elapsedMinutes >= 15) {
             return 'bg-red-500'; // Red background after 15 minutes
-        } else if (elapsedMinutes > 5) {
+        } else if (elapsedMinutes >= 5) {
             return 'bg-orange-500'; // Orange background after 5 minutes
         }
         return 'bg-gray-300'; // Default background for less than 5 minutes
@@ -53,18 +53,25 @@ export const ActiveOrdersContent = () => {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
     
-        // Build the time string based on the duration
         let timeString = "";
     
         if (hours > 0) {
             timeString += `${hours}h `;
         }
-        if (minutes > 0 || hours > 0) { // Show minutes if there are any, or if there's an hour count
+        if (minutes > 0 || hours > 0) {
             timeString += `${minutes}m `;
         }
-        timeString += `${seconds}s`; // Always show seconds
+        timeString += `${seconds}s`;
     
         return timeString.trim(); // Trim any extra space for neatness
+    };
+
+    const renderProducts = (productsString: string) => {
+        return productsString.split(', ').map((product, index) => (
+            <Text key={index} className="pt-2">
+                {index + 1}. {product}
+            </Text>
+        ));
     };
 
     if (isLoading) {
@@ -99,7 +106,7 @@ export const ActiveOrdersContent = () => {
                                     <Text className='text-center font-bold text-2xl text-black'>{order.order_number}</Text>
 
                                     <View className="flex flex-col gap-y-3">
-                                        <Text>{order.products}</Text>
+                                        {renderProducts(order.products)}
                                         <Text>{formatDuration(order.created_at)}</Text>
                                     </View>
                                 </View>
