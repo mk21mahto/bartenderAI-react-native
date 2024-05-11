@@ -22,10 +22,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export const OrderDetailsContent = () => {
     const { top, bottom } = useSafeAreaInsets();
-    const { transcribedText } = useLocalSearchParams<{ transcribedText?: string }>();
+    const { 
+        transcribedText,
+        manualOrderItems, 
+        totalPrice: manualOrderItemsTotalPrice 
+    }: { 
+        transcribedText?: string, 
+        manualOrderItems?: typesProduct[], 
+        totalPrice?: number 
+    } = useLocalSearchParams();
 
     const [products, setProducts] = useState<typesProduct[]>([]);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(manualOrderItemsTotalPrice || 0);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
     const [isPaymentSheetVisible, setIsPaymentSheetVisible] = useState(false);
@@ -38,7 +46,7 @@ export const OrderDetailsContent = () => {
                 .map(line => {
                     const priceMatch = line.match(/(\d+(\.\d+)?)\s*EUR$/);
                     const productPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
-                    // Enhanced regex to remove any leading numbers and dots/spaces from the product name
+
                     const productName = line
                         .replace(/(\d+(\.\d+)?)\s*EUR$/, '') // Remove price
                         .replace(/^\d+\.\s*/, '') // Remove number like 1., 2. ....
@@ -50,8 +58,17 @@ export const OrderDetailsContent = () => {
             console.log("Calculated Total Price:", total);
             setProducts(parsedProducts);
             setTotalPrice(total);
+        } else if (manualOrderItems && Array.isArray(manualOrderItems)) { // Check if manualOrderItems is defined and an array
+            const processedProducts = manualOrderItems.map(item => ({
+                productName: item.productName,
+                productPrice: item.productPrice
+            }));
+    
+            const total = processedProducts.reduce((acc, product) => acc + product.productPrice, 0);
+            setProducts(processedProducts);
+            setTotalPrice(total);
         }
-    }, [transcribedText]);
+    }, [transcribedText, manualOrderItems]);
 
     const removeProduct = (index: number) => {
         const newProducts = [...products];

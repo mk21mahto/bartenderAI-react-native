@@ -96,6 +96,8 @@ export const AiOrderContent = () => {
 
             if (apiResponse.data) {
                 console.log(apiResponse.data);
+                const transcription = apiResponse.headers['x-transcription'];
+                console.log("Received transcription:", transcription);
                 router.push({
                     pathname: "(screens)/order-details",
                     params: {
