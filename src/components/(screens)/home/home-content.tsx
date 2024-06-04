@@ -1,5 +1,5 @@
 // REACT NATIVE IMPORTS
-import { View, Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // EXPO
@@ -20,15 +20,15 @@ export const HomeContent = () => {
     }
 
     return (
-        <View style={{ paddingTop: top, paddingBottom: bottom }} className="flex flex-1">
+        <ScrollView style={{ paddingTop: top, paddingBottom: bottom }} className="flex flex-1">
             <View className="flex flex-1 items-center">
                 <Text className="font-bold text-2xl">Welcome to Tallat Coffee</Text>
 
-                <View className="flex pt-56 items-center w-full gap-y-5">
+                <View className="flex pt-5 items-center w-full gap-y-5">
                     <Button 
                         variant="big" 
                         textVariant="big"
-                        className="w-[90%]"
+                        className="w-[70%]"
                         onPress={handleChooseAIOrder}
                     >
                         AI Order
@@ -37,13 +37,13 @@ export const HomeContent = () => {
                     <Button 
                         variant="big"
                         textVariant="big"
-                        className="w-[90%]"
+                        className="w-[70%]"
                         onPress={handleChooseManualOrder}
                     >
                         Manual Order
                     </Button>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };

@@ -19,7 +19,7 @@ export const makeOrder = async ({
     try {
         const productNames = products.map(product => {
             // Remove "-" dash before sending to database(backend)
-            return product.productName.replace(/\s*-\s*$/, '').trim();
+            return product.product_name.replace(/\s*-\s*$/, '').trim();
         }).join(", ");
         
         const response = await axios.post(`${AWS_EC2_PATH}/api/reactnative/make_order`, {
@@ -31,4 +31,4 @@ export const makeOrder = async ({
     } catch (error) {
         console.log("Error at make_order.ts!");
     }
-}
+};

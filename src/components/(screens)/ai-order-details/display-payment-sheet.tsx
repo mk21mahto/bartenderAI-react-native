@@ -39,7 +39,7 @@ export const DisplayPaymentSheet = ({
 }: DisplayPaymentSheetProps) => {
     const [paymentOption, setPaymentOption] = useState('Credit Card');
 
-    const snapPoints = useMemo(() => ['25%', '50%'], []);
+    const snapPoints = useMemo(() => ['25%', '50%', '95%'], []);
 
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
@@ -57,18 +57,13 @@ export const DisplayPaymentSheet = ({
     const handlePlaceOrder = async (products: typesProduct[]) => {
         try {
             console.log("Ordering with products:", products);
-            const response = await makeOrder({ 
+            await makeOrder({ 
                 products: products, 
                 total_price: totalPrice 
             });
-
-            if(response.ok) {
-                ToastUtil.success("Order placed successfully!");
-                router.replace("(screens)/ai-order");
-            } else {
-                ToastUtil.error("Order failed. Please try again or if issue persists switch to manual order!");
-                router.replace("(screens)/ai-order");
-            }
+  
+            ToastUtil.success("Order placed successfully!");
+            router.replace("(screens)/ai-order");
         } catch (error) {
             ToastUtil.error("Failed to place order!");
             router.replace("(screens)/ai-order");
@@ -88,7 +83,7 @@ export const DisplayPaymentSheet = ({
             backdropComponent={renderBackdrop} // Makes background darker when sheet is opened
             enablePanDownToClose={true} // True makes it so you can swipe with finger to close sheet
         >
-            <View className="flex flex-1 justify-between p-5">
+            <View className="flex flex-1 justify-between px-5 py-1">
                 <View className="flex flex-col">
                     <Text className="font-medium text-3xl">Select Payment Method</Text>
 

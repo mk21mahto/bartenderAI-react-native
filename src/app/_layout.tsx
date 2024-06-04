@@ -96,9 +96,21 @@ export default function Layout() {
             />
 
             <Stack.Screen 
-              name="(screens)/order-details" 
+              name="(screens)/ai-order-details" 
               options={{ 
-                title: "Order details", 
+                title: "AI Order details", 
+                headerStyle: { backgroundColor: "#e64b4f" }, 
+                headerTintColor: "#fff",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                }
+              }}
+            />
+
+            <Stack.Screen 
+              name="(screens)/manual-order-details" 
+              options={{ 
+                title: "Manual order details", 
                 headerStyle: { backgroundColor: "#e64b4f" }, 
                 headerTintColor: "#fff",
                 headerTitleStyle: {

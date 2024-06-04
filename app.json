@@ -2,7 +2,7 @@
   "expo": {
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
-    "orientation": "default",
+    "orientation": "landscape",
     "web": {
       "output": "static",
       "bundler": "metro"

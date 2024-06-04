@@ -10,7 +10,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 // COMPONENTS
 import { Button } from "@/components/ui/button";
-import { DisplayPaymentSheet } from "@/components/(screens)/order-details/display-payment-sheet";
+import { DisplayPaymentSheet } from "@/components/(screens)/ai-order-details/display-payment-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
 
 // TYPES
@@ -20,20 +20,16 @@ import { typesProduct } from "@/types/typesProduct";
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export const OrderDetailsContent = () => {
+export const AIOrderDetailsContent = () => {
     const { top, bottom } = useSafeAreaInsets();
     const { 
         transcribedText,
-        manualOrderItems, 
-        totalPrice: manualOrderItemsTotalPrice 
     }: { 
         transcribedText?: string, 
-        manualOrderItems?: typesProduct[], 
-        totalPrice?: number 
     } = useLocalSearchParams();
 
     const [products, setProducts] = useState<typesProduct[]>([]);
-    const [totalPrice, setTotalPrice] = useState(manualOrderItemsTotalPrice || 0);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
     const [isPaymentSheetVisible, setIsPaymentSheetVisible] = useState(false);
@@ -45,34 +41,25 @@ export const OrderDetailsContent = () => {
                 .filter(line => line.trim() !== "")
                 .map(line => {
                     const priceMatch = line.match(/(\d+(\.\d+)?)\s*EUR$/);
-                    const productPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
+                    const product_price = priceMatch ? parseFloat(priceMatch[1]) : 0;
 
-                    const productName = line
+                    const product_name = line
                         .replace(/(\d+(\.\d+)?)\s*EUR$/, '') // Remove price
                         .replace(/^\d+\.\s*/, '') // Remove number like 1., 2. ....
                         .trim(); // Remove any remaining white space
-                    return { productName, productPrice };
+                    return { product_name, product_price };
                 });
     
-            const total = parsedProducts.reduce((acc, product) => acc + product.productPrice, 0);
+            const total = parsedProducts.reduce((acc, product) => acc + product.product_price, 0);
             console.log("Calculated Total Price:", total);
             setProducts(parsedProducts);
             setTotalPrice(total);
-        } else if (manualOrderItems && Array.isArray(manualOrderItems)) { // Check if manualOrderItems is defined and an array
-            const processedProducts = manualOrderItems.map(item => ({
-                productName: item.productName,
-                productPrice: item.productPrice
-            }));
-    
-            const total = processedProducts.reduce((acc, product) => acc + product.productPrice, 0);
-            setProducts(processedProducts);
-            setTotalPrice(total);
         }
-    }, [transcribedText, manualOrderItems]);
+    }, [transcribedText]);
 
     const removeProduct = (index: number) => {
         const newProducts = [...products];
-        const priceToSubtract = newProducts[index].productPrice;
+        const priceToSubtract = newProducts[index].product_price;
         newProducts.splice(index, 1);
         setProducts(newProducts);
         setTotalPrice(prevTotal => prevTotal - priceToSubtract);
@@ -91,8 +78,8 @@ export const OrderDetailsContent = () => {
 
                     <View className="flex flex-col pt-5 gap-y-3">
                         {products.map((item, index) => {
-                            const itemName = item.productName || "Unknown product";
-                            const itemPrice = item.productPrice !== undefined ? `${item.productPrice} EUR` : "Price not available";
+                            const itemName = item.product_name || "Unknown product";
+                            const itemPrice = item.product_price !== undefined ? `${item.product_price} EUR` : "Price not available";
 
                             return (
                                 <View key={index} className="flex flex-row p-3 justify-between bg-gray-500 mt-2 rounded-md">
